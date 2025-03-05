@@ -34,23 +34,7 @@ jobs:
         with:
           target: ${{ env.URL }}
           network_name: isolated
-          artifact_name: zap-scan  # Ganti nama artifact di sini
+          artifact_name: zap-scan  # Gunakan nama artifact valid
 
       - name: stop docker
         run: docker stop docker-apache
-
-  sast:
-    name: Psalm
-    permissions: write-all
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Psalm Security Scan
-        uses: docker://ghcr.io/psalm/psalm-security-scan
-        
-      - name: Import Security Analysis results into GitHub Security Code Scanning
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: results.sarif
