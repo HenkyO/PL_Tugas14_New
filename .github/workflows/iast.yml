@@ -49,14 +49,16 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
-          java-version: '11'
+          java-version: '17'
           distribution: 'temurin'
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v1.8
         with:
-          organization: henkyo                  # Organisasi SonarCloud Anda
-          projectKey: HenkyO_PL_Tugas14_New       # Project Key Anda
-          projectName: PL_Tugas14_New             # Nama Project Anda
+          args: >
+            -Dsonar.organization=henkyo
+            -Dsonar.projectKey=HenkyO_PL_Tugas14_New
+            -Dsonar.projectName=PL_Tugas14_New
+            -Dsonar.sources=.
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
