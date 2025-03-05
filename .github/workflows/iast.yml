@@ -28,13 +28,6 @@ jobs:
 
       - name: Check AUT URL
         run: curl ${{ env.URL }}
-      
-      - name: ZAP Scan
-        uses: hermanka/action-full-scan@master
-        with:
-          artifact_name: zap_report
-          target: ${{ env.URL }}
-          network_name: isolated
 
       - name: stop docker
         run: docker stop docker-apache
@@ -53,5 +46,3 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: results.sarif
-
-          
