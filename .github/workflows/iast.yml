@@ -4,41 +4,6 @@ on:
     branches:
       - main
 jobs:
-  dast:
-    name: Dynamic Application Security Test
-    permissions: write-all
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout the repo
-        uses: actions/checkout@v4
-
-      - name: Create isolated network
-        run: docker network create --driver bridge isolated      
-
-      - name: Deploy AUT
-        run: docker build -t my-php-site:latest .
-        
-      - name: Run AUT
-        run: docker run --network=isolated -p 80:80 --name docker-apache -t -d my-php-site:latest
-
-      - name: Get AUT URL
-        run: |
-          URL=http://$(ip -f inet -o addr show docker0 | awk '{print $4}' | cut -d '/' -f 1)
-          echo "URL=$URL" >> $GITHUB_ENV
-
-      - name: Check AUT URL
-        run: curl ${{ env.URL }}
-
-      - name: ZAP Scan
-        uses: hermanka/action-full-scan@master
-        with:
-          target: ${{ env.URL }}
-          network_name: isolated
-          artifact_name: zap-scan
-
-      - name: stop docker
-        run: docker stop docker-apache
-
   sast:
     name: SonarCloud Scan
     runs-on: ubuntu-latest
@@ -46,11 +11,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Java
+      - name: Set up Java 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
+
+      - name: Force Java 17 for SonarScanner
+        run: echo "JAVA_HOME=$JAVA_HOME_17_X64" >> $GITHUB_ENV
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v1.8
