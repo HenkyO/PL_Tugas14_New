@@ -34,9 +34,11 @@ jobs:
         with:
           target: ${{ env.URL }}
           network_name: isolated
+          artifact_name: zap-scan  # Ganti nama artifact di sini
 
       - name: stop docker
         run: docker stop docker-apache
+
   sast:
     name: Psalm
     permissions: write-all
